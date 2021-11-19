@@ -22,11 +22,11 @@ public:
 	void setSize(int s);
 	int getSize() const;
 	void insert(const studentRecord& student);
-	void find(int key, bool& found, studentRecord& student);
-	void findIndex(int key, bool& found, int& i);
+	bool find(int key, studentRecord& student);
+	bool findIndex(int key, int& i);
 	int hash(int key)const;
 	void display();
-	bool deleteRecord(int key);
+	void deleteRecord(int key);
 	~HashTable();
 };
 

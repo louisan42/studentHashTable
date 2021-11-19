@@ -31,6 +31,10 @@ void HashTable::setSize(int s)
 {
 	size = s;
 	hashData = new studentRecord[size];
+	for (size_t i = 0; i < size; i++)
+	{
+		hashData[i].studentID = -1;
+	}
 }
 
 int HashTable::getSize() const
@@ -40,32 +44,41 @@ int HashTable::getSize() const
 
 void HashTable::insert(const studentRecord& student)
 {
-	bool itemPresent;
 	int index = 0;
-	findIndex(student.studentID, itemPresent, index);
+	bool itemPresent = findIndex(student.studentID, index);
+	
 	if (!itemPresent) {
 		assert(getUsed() < getSize());
 		used++;
 	}
 	hashData[index] = student;
+	
 }
 
-void HashTable::find(int key, bool& found, studentRecord& student)
+bool HashTable::find(int key, studentRecord& student)
 {
-	findIndex(key, found, idx);
-	if (found)
+	bool found{ false };
+	
+	if (findIndex(key, idx))
 	{
 		student = hashData[idx];
+		std::cout << "Student Found!" << std::endl;
+		found = true;
 
 	}
+	else {
+		std::cout << "Student not found!" << std::endl;
+	}
+	return found;
 }
 
-void HashTable::findIndex(int key, bool& found, int& i)
+bool HashTable::findIndex(int key, int& i)
 {
+	bool found{ false };
 	int count{ 0 };
 	i = hash(key);
-	found = hashData[i].studentID == key;
-	std::cout << "Found student ID " << found << std::endl;
+	
+	return hashData[i].studentID == key;
 }
 
 int HashTable::hash(int key) const
@@ -89,16 +102,19 @@ void HashTable::display()
 	}
 }
 
-bool HashTable::deleteRecord(int key)
+void HashTable::deleteRecord(int key)
 {
-	bool success{ false }, itemPresent;
 	int index{ 0 };
-	findIndex(key, itemPresent, index);
-	if (itemPresent) {
-		hashData[index].studentID = -1000;
-		success = true;
+	;
+	if (findIndex(key, index)) {
+		 hashData[index].studentID = -1000;
+		 hashData[index].name.clear();
+		 hashData[index].marks_oop345 = 0.0f;
+		std::cout << "Student deleted successfully!" << std::endl;
 	}
-	return success;
+	else {
+		std::cout << "Student not in records table" << std::endl;
+	}
 }
 
 HashTable::~HashTable()
